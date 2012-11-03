@@ -58,7 +58,8 @@ namespace org\inservibile {
 					if ($result = call_user_func_array( array( $object, $request['method']), $request['params']) ) {
 						$response['result'] = $result;
 					} else {
-						$response['error'] = 'unknown method or incorrect parameters';
+						$response['error'] = 'unknown method or incorrect parameters: '.
+							get_class($object).'->'.$request['method'].'('.print_r($request['params'], true).')' ;
 					}
 				} catch (Exception $e) {
 					$response['error'] = $e->getMessage();
