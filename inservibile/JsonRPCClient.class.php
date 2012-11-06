@@ -1,6 +1,6 @@
 <?php
 /*
-					COPYRIGHT
+COPYRIGHT
 
 Copyright 2007 Sergio Vaccaro <sergio@inservibile.org>
 Copyright 2012 Johannes Weberhofer <jweberhofer@weberhofer.at>
@@ -24,9 +24,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /**
  * The object of this class are generic jsonRPC 1.0 clients
- * http://json-rpc.org/wiki/specification
- *
+ * 
+ * @see http://json-rpc.org/wiki/specification
+ * @license GPLv2+
  * @author sergio <jsonrpcphp@inservibile.org>
+ * @author Johannes Weberhofer <jweberhofer@weberhofer.at>
  */
 
 namespace org\inservibile {

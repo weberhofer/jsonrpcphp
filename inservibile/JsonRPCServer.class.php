@@ -24,9 +24,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
 /**
  * This class build a json-RPC Server 1.0
- * http://json-rpc.org/wiki/specification
- *
+ * 
+ * @see http://json-rpc.org/wiki/specification
+ * @license GPLv2+
  * @author sergio <jsonrpcphp@inservibile.org>
+ * @author Johannes Weberhofer <jweberhofer@weberhofer.at>
  */
 
 namespace org\inservibile {
