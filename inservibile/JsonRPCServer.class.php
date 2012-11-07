@@ -57,13 +57,9 @@ namespace org\inservibile {
 				// executes the task on local object
 				$response = array ( 'id' => $request['id'], 'result' => NULL, 'error' => NULL ); 
 				try {
-					if ($result = call_user_func_array( array( $object, $request['method']), $request['params']) ) {
-						$response['result'] = $result;
-					} else {
-						$response['error'] = 'unknown method or incorrect parameters: '.
-							get_class($object).'->'.$request['method'].'('.print_r($request['params'], true).')' ;
-					}
+					$response['result'] = call_user_func_array( array( $object, $request['method']), $request['params']);
 				} catch (Exception $e) {
+					$response['result'] = null;
 					$response['error'] = $e->getMessage();
 				}
 				
