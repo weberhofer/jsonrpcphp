@@ -52,7 +52,7 @@ namespace org\inservibile {
 				header('Content-Type: application/json');
 				echo "Status: 406 Not Acceptable; Valid Content-Type application/json";
 			} else {
-				// reads the input data
+				// read the input data
 				$request = json_decode(file_get_contents('php://input'),true);
 				// executes the task on local object
 				$response = array ( 'id' => $request['id'], 'result' => NULL, 'error' => NULL ); 
