@@ -58,7 +58,7 @@ namespace org\jsonrpcphp {
 				$response = array ( 'id' => $request['id'], 'result' => NULL, 'error' => NULL ); 
 				try {
 					$response['result'] = call_user_func_array( array( $object, $request['method']), $request['params']);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					$response['result'] = null;
 					$response['error'] = $e->getMessage();
 				}
