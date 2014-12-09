@@ -101,7 +101,7 @@ namespace org\jsonrpcphp {
 			
 			// check
 			if (!is_scalar($method)) {
-				throw new Exception('Method name has no scalar value');
+				throw new \Exception('Method name has no scalar value');
 			}
 			
 			// check
@@ -109,7 +109,7 @@ namespace org\jsonrpcphp {
 				// no keys
 				$params = array_values($params);
 			} else {
-				throw new Exception('Params must be given as array');
+				throw new \Exception('Params must be given as array');
 			}
 			
 			// sets notification or request task
@@ -146,7 +146,7 @@ namespace org\jsonrpcphp {
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $request);
 				$response = curl_exec($ch);
 				if ( $response === false ) {
-					throw new Exception('Unable to connect to '.$this->url);
+					throw new \Exception('Unable to connect to '.$this->url);
 				}
 			} else {
 				if ($fp = fopen($this->url, 'r', false, $context)) {
@@ -155,7 +155,7 @@ namespace org\jsonrpcphp {
 						$response.= trim($row)."\n";
 					}
 				} else {
-					throw new Exception('Unable to connect to '.$this->url);
+					throw new \Exception('Unable to connect to '.$this->url);
 				}
 			}
 			$this->debug && $this->debug.='***** Response *****'."\n".$response."\n".'***** End of Response *****'."\n\n";
