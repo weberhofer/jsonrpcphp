@@ -1,6 +1,5 @@
 {
     "name": "weberhofer/jsonrpcphp",
-    "version": "2.0.1"
     "type": "library",
     "description": "JSON-RPC for PHP 5.3+",
     "keywords": ["json","rpc"],
@@ -8,15 +7,15 @@
     "license": "GPL-2.0+",
     "authors": [
         {
-            "name": "Sergio Vaccaro",
-            "email": "info@jsonrpcphp.org",
-            "homepage": "http://jsonrpcphp.org/",
-            "role": "Developer"
-        },
-        {
             "name": "Johannes Weberhofer",
             "email": "jweberhofer@weberhofer.at",
             "homepage": "http://www.weberhofer.at",
+            "role": "Developer"
+        },
+        {
+            "name": "Sergio Vaccaro",
+            "email": "info@jsonrpcphp.org",
+            "homepage": "http://jsonrpcphp.org/",
             "role": "Developer"
         }
     ],
