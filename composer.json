@@ -1,0 +1,40 @@
+{
+    "name": "weberhofer/jsonrpcphp",
+    "version": "2.0.1"
+    "type": "library",
+    "description": "JSON-RPC for PHP 5.3+",
+    "keywords": ["json","rpc"],
+    "homepage": "https://github.com/weberhofer/jsonrpcphp",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Sergio Vaccaro",
+            "email": "info@jsonrpcphp.org",
+            "homepage": "http://jsonrpcphp.org/",
+            "role": "Developer"
+        },
+        {
+            "name": "Johannes Weberhofer",
+            "email": "jweberhofer@weberhofer.at",
+            "homepage": "http://www.weberhofer.at",
+            "role": "Developer"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/weberhofer/jsonrpcphp.git"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/weberhofer/jsonrpcphp/issues"
+    },
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "org\\jsonrpcphp\\": "src/"
+        }
+    }
+}
