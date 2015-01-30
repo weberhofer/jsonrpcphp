@@ -1,9 +1,7 @@
 <?php
 /*
-COPYRIGHT
-
 Copyright 2007 Sergio Vaccaro <sergio@inservibile.org>
-Copyright 2012 Johannes Weberhofer <jweberhofer@weberhofer.at>
+Copyright 2012, 2015 Johannes Weberhofer <jweberhofer@weberhofer.at>
 
 This file is part of JSON-RPC PHP.
 
