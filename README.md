@@ -10,7 +10,7 @@ been fixed.
 
 To install
 ```bash
-composer require cmutter/google-adwords-api
+composer require weberhofer/jsonrpcphp
 ```
 or add this to your composer.json, and ```composer update``` 
 
