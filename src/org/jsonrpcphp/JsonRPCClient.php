@@ -60,6 +60,14 @@ class JsonRPCClient
      * @var boolean
      */
     private $notification = false;
+    
+    /**
+     * If false, requests will be forced to use fopen() instead.
+     * This option is specific in case of cURL is callable but may not practically unsable.
+     * 
+     * @var boolean
+     */
+    private $enableCurl = true;
 
     /**
      * Takes the connection parameters
@@ -141,7 +149,7 @@ class JsonRPCClient
         );
         $context = stream_context_create($opts);
 
-        if (is_callable('curl_init')) {
+        if ($this->enableCurl && is_callable('curl_init')) {
             // use curl when available; solves problems with allow_url_fopen
             $ch = curl_init($this->url);
             curl_setopt($ch, CURLOPT_POST, 1);
@@ -184,5 +192,21 @@ class JsonRPCClient
         } else {
             return true;
         }
+    }
+    
+    /**
+     * Enable cURL when performs a jsonRCP request.
+     */
+    public function enableCurl()
+    {
+        $this->enableCurl = true;
+    }
+    
+    /**
+     * Disable cURL when performs a jsonRCP request.
+     */
+    public function disableCurl()
+    {
+        $this->enableCurl = false;
     }
 }
