@@ -140,15 +140,6 @@ class JsonRPCClient
         }
 
         // performs the HTTP POST
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-type: application/json',
-                'content' => $request
-            )
-        );
-        $context = stream_context_create($opts);
-
         if ($this->enableCurl && is_callable('curl_init')) {
             // use curl when available; solves problems with allow_url_fopen
             $ch = curl_init($this->url);
@@ -164,6 +155,15 @@ class JsonRPCClient
                 throw new \Exception('Unable to connect to ' . $this->url);
             }
         } else {
+            $opts = array(
+                'http' => array(
+                    'method' => 'POST',
+                    'header' => 'Content-type: application/json',
+                    'content' => $request
+                )
+            );
+            $context = stream_context_create($opts);
+
             if ($fp = fopen($this->url, 'r', false, $context)) {
                 $response = '';
                 while ($row = fgets($fp)) {
