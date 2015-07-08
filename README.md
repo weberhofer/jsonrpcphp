@@ -17,7 +17,7 @@ or add this to your composer.json, and ```composer update```
 ```JSON  
 {
     "require": {
-        "weberhofer/jsonrpcphp": "2.1.0"
+        "weberhofer/jsonrpcphp": "~2"
     }
 }
 ```
