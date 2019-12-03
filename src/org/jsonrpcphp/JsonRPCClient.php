@@ -60,11 +60,11 @@ class JsonRPCClient
      * @var boolean
      */
     private $notification = false;
-    
+
     /**
      * If false, requests will be forced to use fopen() instead.
      * This option is specific in case of cURL is callable but may not practically unsable.
-     * 
+     *
      * @var boolean
      */
     private $enableCurl = true;
@@ -184,8 +184,8 @@ class JsonRPCClient
             if ($response['id'] != $currentId) {
                 throw new \Exception('Incorrect response id: ' . $response['id'] . ' (request id: ' . $currentId . ')');
             }
-            if (! is_null($response['error'])) {
-                throw new \Exception('Request error: ' . $response['error']);
+            if (array_key_exists('error', $response) && $response['error'] !== null) {
+                throw new \Exception('Request error: ' . json_encode($response['error']));
             }
 
             return $response['result'];
@@ -193,7 +193,7 @@ class JsonRPCClient
             return true;
         }
     }
-    
+
     /**
      * Enable cURL when performs a jsonRCP request.
      */
@@ -201,7 +201,7 @@ class JsonRPCClient
     {
         $this->enableCurl = true;
     }
-    
+
     /**
      * Disable cURL when performs a jsonRCP request.
      */
