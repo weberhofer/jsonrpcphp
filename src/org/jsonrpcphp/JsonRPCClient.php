@@ -27,6 +27,7 @@
  * @license GPLv2+
  * @author sergio <jsonrpcphp@inservibile.org>
  * @author Johannes Weberhofer <jweberhofer@weberhofer.at>
+ * @author Joschka Seydell <joschka@seydell.org>
  */
 namespace org\jsonrpcphp;
 
@@ -46,6 +47,13 @@ class JsonRPCClient
      * @var string
      */
     private $url;
+
+    /**
+     * Path to an SSL chain certificate to be used in cURL requests.
+     * 
+     * @var string
+     */
+    private $serverCertChainFile;
 
     /**
      * Proxy to be used
@@ -80,12 +88,14 @@ class JsonRPCClient
      * Takes the connection parameters
      *
      * @param string $url
+     * @param string $serverCertChainFile
      * @param boolean $debug
      * @param string $proxy
      */
-    public function __construct($url, $debug = false, $proxy = null)
+    public function __construct($url, $serverCertChainFile = '', $debug = false, $proxy = null)
     {
         $this->url = $url;
+        $this->serverCertChainFile = $serverCertChainFile;
         $this->proxy = $proxy;
         $this->debug = ($this->debug === true);
         // message id
@@ -149,6 +159,12 @@ class JsonRPCClient
             // use curl when available; solves problems with allow_url_fopen
             $ch = curl_init($this->url);
             curl_setopt($ch, CURLOPT_POST, 1);
+            // if a custom ssl configuration is provided use this instead of the default settings
+            if (strlen($this->serverCertChainFile) != 0) {
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_CAINFO, $this->serverCertChainFile);
+            }
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
                 'Content-type: application/json'
             ));
