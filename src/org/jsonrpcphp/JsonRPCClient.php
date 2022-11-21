@@ -28,6 +28,7 @@
  * @author sergio <jsonrpcphp@inservibile.org>
  * @author Johannes Weberhofer <jweberhofer@weberhofer.at>
  */
+
 namespace org\jsonrpcphp;
 
 class JsonRPCClient
@@ -108,13 +109,15 @@ class JsonRPCClient
      *
      * @param string $method
      * @param array $params
+     *
      * @return array
+     * @throws \Exception
      */
     public function __call($method, $params)
     {
 
         // check
-        if (! is_scalar($method)) {
+        if ( ! is_scalar($method)) {
             throw new \Exception('Method name has no scalar value');
         }
 
@@ -137,11 +140,11 @@ class JsonRPCClient
         $request = array(
             'method' => $method,
             'params' => $params,
-            'id' => $currentId
+            'id' => $currentId,
         );
         $request = json_encode($request);
         if ($this->debug) {
-            echo '***** Request *****' . "\n" . $request . "\n";
+            echo '***** Request *****'."\n".$request."\n";
         }
 
         // performs the HTTP POST
@@ -150,7 +153,7 @@ class JsonRPCClient
             $ch = curl_init($this->url);
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Content-type: application/json'
+                'Content-type: application/json',
             ));
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
@@ -160,40 +163,84 @@ class JsonRPCClient
             }
             $response = curl_exec($ch);
             if ($response === false) {
-                throw new \Exception('Unable to connect to ' . $this->url);
+                throw new \Exception('Unable to connect to '.$this->url);
             }
         } else {
             $opts = array(
                 'http' => array(
                     'method' => 'POST',
                     'header' => 'Content-type: application/json',
-                    'content' => $request
-                )
+                    'content' => $request,
+                ),
             );
             $context = stream_context_create($opts);
 
             if ($fp = fopen($this->url, 'r', false, $context)) {
                 $response = '';
                 while ($row = fgets($fp)) {
-                    $response .= trim($row) . "\n";
+                    $response .= trim($row)."\n";
                 }
             } else {
-                throw new \Exception('Unable to connect to ' . $this->url);
+                throw new \Exception('Unable to connect to '.$this->url);
             }
         }
         if ($this->debug) {
-            echo '***** Response *****' . "\n" . $response . "\n" . '***** End of Response *****' . "\n\n";
+            echo '***** Response *****'."\n".$response."\n".'***** End of Response *****'."\n\n";
         }
         $response = json_decode($response, true);
 
+        // Check for errors
+        $jsonLastError = null;
+        switch (json_last_error()) {
+            case JSON_ERROR_NONE:
+                break;
+            case JSON_ERROR_DEPTH:
+                $jsonLastError = ' - Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $jsonLastError = ' - Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $jsonLastError = ' - Unexpected control character found';
+                break;
+            case JSON_ERROR_SYNTAX:
+                $jsonLastError = ' - Syntax error, malformed JSON';
+                break;
+            case JSON_ERROR_UTF8:
+                $jsonLastError = ' - Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $jsonLastError = ' - Unknown error';
+                break;
+        }
+
         // final checks and return
-        if (! $this->notification) {
-            // check
-            if ($response['id'] != $currentId) {
-                throw new \Exception('Incorrect response id: ' . $response['id'] . ' (request id: ' . $currentId . ')');
-            }
-            if (array_key_exists('error', $response) && $response['error'] !== null) {
-                throw new \Exception('Request error: ' . json_encode($response['error']));
+        if ( ! $this->notification) {
+            switch (true) {
+                case ! is_array($response):
+                    throw new \Exception(
+                        sprintf('Incorrect response: %s. (jsonLastError: %s)', $response, $jsonLastError));
+                    break;
+                case ! isset($response['id']):
+                    throw new \Exception(
+                        sprintf('The response has no response id! (jsonLastError: %s || response: %s)', $jsonLastError,
+                            json_encode($response)));
+                    break;
+                case $response['id'] != $currentId:
+                    throw new \Exception(
+                        sprintf('Missmatching response id: recieved %s but was expecting %s . (response: %s)',
+                            $response['id'], $currentId, json_encode($response)));
+                    break;
+                case array_key_exists('error', $response):
+                    throw new \Exception(
+                        sprintf('Request error: %s', json_encode($response['error'])));
+                    break;
+                case ! array_key_exists('result', $response):
+                    throw new \Exception(
+                        sprintf('Request has no result to return! (response: %s)', json_encode($response)));
+                    break;
+
+                default:
             }
 
             return $response['result'];
