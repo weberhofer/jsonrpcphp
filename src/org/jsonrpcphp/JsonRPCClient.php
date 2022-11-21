@@ -216,31 +216,31 @@ class JsonRPCClient
 
         // final checks and return
         if ( ! $this->notification) {
+            $errorMessage = null;
             switch (true) {
                 case ! is_array($response):
-                    throw new \Exception(
-                        sprintf('Incorrect response: %s. (jsonLastError: %s)', $response, $jsonLastError));
+                    $errorMessage = sprintf('Incorrect response: %s. (jsonLastError: %s)', $response, $jsonLastError);
                     break;
                 case ! isset($response['id']):
-                    throw new \Exception(
-                        sprintf('The response has no response id! (jsonLastError: %s || response: %s)', $jsonLastError,
-                            json_encode($response)));
+                    $errorMessage = sprintf('The response has no response id! (jsonLastError: %s || response: %s)',
+                        $jsonLastError, json_encode($response));
                     break;
                 case $response['id'] != $currentId:
-                    throw new \Exception(
-                        sprintf('Missmatching response id: recieved %s but was expecting %s . (response: %s)',
-                            $response['id'], $currentId, json_encode($response)));
+                    $errorMessage = sprintf('Missmatching response id: recieved %s but was expecting %s . (response: %s)',
+                        $response['id'], $currentId, json_encode($response));
                     break;
                 case array_key_exists('error', $response) && $response['error']:
-                    throw new \Exception(
-                        sprintf('Request error: %s', json_encode($response['error'])));
+                    $errorMessage = sprintf('Request error: %s', json_encode($response['error']));
                     break;
                 case ! array_key_exists('result', $response):
-                    throw new \Exception(
-                        sprintf('Request has no result to return! (response: %s)', json_encode($response)));
+                    $errorMessage = sprintf('Request has no result to return! (response: %s)', json_encode($response));
                     break;
 
                 default:
+            }
+
+            if ($errorMessage) {
+                throw new \Exception($errorMessage);
             }
 
             return $response['result'];
